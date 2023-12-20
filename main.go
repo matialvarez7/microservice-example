@@ -14,13 +14,12 @@ import (
 func main() {
 
 	l := log.New(os.Stdout, "product-api", log.LstdFlags)
-	// referencia al handler Hello
-	hh := handlers.NewHello(l)
-	gh := handlers.NewGoodbye(l)
+	// referencia al handler products
+	ph := handlers.NewProducts(l)
 
+	// Creamos un nuevo server mux que registra los distintos handlers
 	sm := http.NewServeMux()
-	sm.Handle("/", hh)
-	sm.Handle("/goodbye", gh)
+	sm.Handle("/", ph)
 
 	// Creamos un servidor al cual le configuramos las características que deseamos para nuestro servicio
 	s := &http.Server{
