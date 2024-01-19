@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/matialvarez7/microservice-example/handlers"
 )
 
@@ -18,8 +19,13 @@ func main() {
 	ph := handlers.NewProducts(l)
 
 	// Creamos un nuevo server mux que registra los distintos handlers
-	sm := http.NewServeMux()
-	sm.Handle("/", ph)
+	sm := mux.NewRouter()
+
+	getRouter := sm.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/", ph.GetProducts)
+
+	putRouter := sm.Methods(http.MethodPut).Subrouter()
+	putRouter.HandleFunc("/{id:[0-9]+}", ph.UpdateProducts)
 
 	// Creamos un servidor al cual le configuramos las características que deseamos para nuestro servicio
 	s := &http.Server{
